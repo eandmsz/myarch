@@ -10,9 +10,13 @@ pacman -S git base-devel rust nodejs npm python-pip libxkbcommon systemd-libs li
 # CLI Tools
 pacman -S sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish starship vim nvtop iotop-c bc 7zip tar
 # GUI Tools
-pacman -S ttf-jetbrains-mono-nerd zed kitty steam qbittorrent doublecmd-qt6 kodi mpv handbrake mkvtoolnix-gui discord
+pacman -S zed kitty qbittorrent steam discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui
+# Fonts
 
 printf "Press Enter to continue..."; read dummy
+
+pacman -S ttf-jetbrains-mono-nerd ttf-roboto ttf-roboto-mono-nerd inter-font ttf-liberation otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-firacode-nerdttf-bigblueterminal-nerd ttf-dejavu-nerd ttf-caladea texlive-fontsextra texlive-latexextra
+    # jetbrains is for terminal/notepad, roboto and inter are for menus (similar to SanFrancisco Display), liberation is for Microsoft Windows compatilibity, Caladea is compatible with cambria
 
 # Note: Preferred font with Nerd update for terminal, notepad and system monospace font: JetBrains Mono Nerd
 #    All of these are sans serif (nem talpas) my second choice is Hack
@@ -20,18 +24,117 @@ printf "Press Enter to continue..."; read dummy
 #    - Hack (derived from DejaVu) released 2015, updated 2018, no programming ligatures e.g. !=
 #    - JetBrains Mono: released 2020 updated 2023, has programming ligatures e.g. != has nicer 19*><% , narrowest of the three
 
+printf "Press Enter to continue..."; read dummy
+
+# Starship terminal prettyness
+starship preset /etc/greetd/config.toml -o ~/.config/starship.toml
+sudo tee /etc/greetd/config.toml <<'EOF'
+add_newline = false
+command_timeout = 1000
+
+format = """
+$character\
+[](fg:white bg:bright-black)\
+[█](fg:bright-black bg:black)\
+$directory\
+[█](fg:bright-black bg:black)\
+[$git_branch\
+$git_state\
+$git_status](bold bg:black fg:white)\
+$fill\
+$cmd_duration\
+[](fg:red bg:black)\
+[ ](fg:black bg:red)\
+$username\
+[](fg:green bg:bright-black)\
+[󰌽 ](fg:green bg:black inverted)\
+$hostname\
+$line_break\
+[‎]()"""
+
+[character]
+format = "$symbol"
+error_symbol = "[█](fg:red bg:black)[ ERROR](fg:red bg:black inverted bold)[](fg:red bg:white)"
+success_symbol = "[█](fg:bright-white bg:black)[ PROMPT](fg:bright-white bg:black inverted bold)[](fg:bright-white bg:white)"
+
+[fill]
+symbol = ' '
+style = 'bg:black'
+
+[package]
+disabled = false
+
+[cmd_duration]
+min_time = 1000
+show_milliseconds = false
+disabled = false
+format="[󰞌 $duration ]($style)"
+style="bold bg:black"
+
+[directory]
+truncation_length = 5
+format = "[󰉋 $path]($style)[$lock_symbol]($lock_style)"
+style = "bold fg:bright-white bg:bright-black"
+read_only = "🔒"
+read_only_style= "bold white"
+
+[username]
+show_always = true
+style_user = "bg:bright-black"
+style_root = "bg:bright-black"
+format = '[ $user ]($style)'
+
+[hostname]
+format = "[ $hostname ]($style)"
+ssh_only = false
+trim_at = ".companyname.com"
+disabled = false
+style = "fg:green bg:bright-black"
+
+[git_commit]
+commit_hash_length = 8
+style = "bold white"
+
+[status]
+style = "bg:transparent"
+symbol = "💥 "
+format = '($style)'
+disabled = false
+
+[git_branch]
+format = " 󰘬 $branch"
+style = "bold fg:bright-black bg:black"
+
+[git_status]
+format = " $conflicted$untracked$modified$staged$renamed$deleted$ahead_behind$stashed"
+style = "cyan"
+conflicted = ""
+untracked = ""
+modified = ""
+staged = ""
+renamed = ""
+deleted = ""
+stashed = "≡"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "cyan"
+EOF
+
+# Enable sudo
 EDITOR='sed -i "s/^# *\(%wheel ALL=(ALL:ALL) ALL\)$/\1/"' visudo
 
-sed -i '/^\[default_session\]/,/^\[/ s|^user *=.*|user = "greeter"|' /etc/greetd/config.toml
-
+# Add user and enable rootless GPU resource access
 read -rp "Username: " username
 useradd -m -G wheel -s /bin/bash "$username"
 passwd "$username"
-
 sudo systemctl enable --now seatd
 sudo usermod -aG seat $username
 
 printf "Press Enter to continue..."; read dummy
+
+# Enable login manager
+sed -i '/^\[default_session\]/,/^\[/ s|^user *=.*|user = "greeter"|' /etc/greetd/config.toml
 
 cat /etc/greetd/config.toml
 
