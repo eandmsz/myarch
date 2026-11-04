@@ -9,117 +9,37 @@ fi
 sudo sed -i '/^#\[multilib\]/,/^#Include/ s/^#//' /etc/pacman.conf
 sudo pacman -Syu
 
+# Boot manager and splash screen
+pacman -S --needed --noconfirm refind plymouth
+# Login manager
+pacman -S --needed --noconfirm greetd-regreet
 # Base system tools
-pacman -S git base-devel rust nodejs npm python-pip libxkbcommon systemd-libs libinput mesa clang seatd wayland xorg-xwayland xwayland-satellite nvidia-open nvidia-settings refind greetd
+pacman -S --needed --noconfirm git base-devel rust nodejs npm python-pip
+
+# Compositor (ShojiWM) requirements
+#pacman -S --needed --noconfirm libxkbcommon systemd-libs libinput mesa seatd libxcb xcb-util-cursor xorg-xwayland clang
+
+# Wayland Compositor (and Window Manager)
+pacman -S --needed --noconfirm umbriel xorg-xwayland libinput
+# Shell
+pacman -S --needed --noconfirm noctalia
+
+# Steam and requirements
+pacman -S --needed --noconfirm steam xwayland-satellite nvidia-open nvidia-settings
 # CLI Tools
-pacman -S sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish starship vim nvtop iotop-c bc 7zip tar
+pacman -S --needed --noconfirm sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar
 # GUI Tools
-pacman -S zed kitty qbittorrent steam discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui
+pacman -S --needed --noconfirm zed kitty qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui
 # Fonts
-pacman -S ttf-font-nerd ttf-roboto inter-font ttf-liberation otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra
+pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberation otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra
 # jetbrains is for terminal/notepad, roboto and inter are for menus (similar to SanFrancisco Display), liberation is for Microsoft Windows compatilibity, Caladea is compatible with cambria
 # Preferred font with Nerd update for terminal, notepad and system monospace font: JetBrains Mono Nerd
 #    All of these are sans serif (nem talpas) my second choice is Hack
 #    - Fira Code (derived from Mozialla Fira Mono) released 2014 updated 2022, has programming ligatures e.g. !=, widest of the three
 #    - Hack (derived from DejaVu) released 2015, updated 2018, no programming ligatures e.g. !=
 #    - JetBrains Mono: released 2020 updated 2023, has programming ligatures e.g. != has nicer 19*><% , narrowest of the three
-
+# Preferred font for menu: SF Pro Display or Inter as my second choice (Noto Sans and Roboto are also good)
 printf "Press Enter to continue..."; read dummy
-
-# Starship terminal prettyness
-starship preset /etc/greetd/config.toml -o ~/.config/starship.toml
-sudo tee /etc/greetd/config.toml <<'EOF'
-add_newline = false
-command_timeout = 1000
-
-format = """
-$character\
-[](fg:white bg:bright-black)\
-[█](fg:bright-black bg:black)\
-$directory\
-[█](fg:bright-black bg:black)\
-[$git_branch\
-$git_state\
-$git_status](bold bg:black fg:white)\
-$fill\
-$cmd_duration\
-[](fg:red bg:black)\
-[ ](fg:black bg:red)\
-$username\
-[](fg:green bg:bright-black)\
-[󰌽 ](fg:green bg:black inverted)\
-$hostname\
-$line_break\
-[‎]()"""
-
-[character]
-format = "$symbol"
-error_symbol = "[█](fg:red bg:black)[ ERROR](fg:red bg:black inverted bold)[](fg:red bg:white)"
-success_symbol = "[█](fg:bright-white bg:black)[ PROMPT](fg:bright-white bg:black inverted bold)[](fg:bright-white bg:white)"
-
-[fill]
-symbol = ' '
-style = 'bg:black'
-
-[package]
-disabled = false
-
-[cmd_duration]
-min_time = 1000
-show_milliseconds = false
-disabled = false
-format="[󰞌 $duration ]($style)"
-style="bold bg:black"
-
-[directory]
-truncation_length = 5
-format = "[󰉋 $path]($style)[$lock_symbol]($lock_style)"
-style = "bold fg:bright-white bg:bright-black"
-read_only = "🔒"
-read_only_style= "bold white"
-
-[username]
-show_always = true
-style_user = "bg:bright-black"
-style_root = "bg:bright-black"
-format = '[ $user ]($style)'
-
-[hostname]
-format = "[ $hostname ]($style)"
-ssh_only = false
-trim_at = ".companyname.com"
-disabled = false
-style = "fg:green bg:bright-black"
-
-[git_commit]
-commit_hash_length = 8
-style = "bold white"
-
-[status]
-style = "bg:transparent"
-symbol = "💥 "
-format = '($style)'
-disabled = false
-
-[git_branch]
-format = " 󰘬 $branch"
-style = "bold fg:bright-black bg:black"
-
-[git_status]
-format = " $conflicted$untracked$modified$staged$renamed$deleted$ahead_behind$stashed"
-style = "cyan"
-conflicted = ""
-untracked = ""
-modified = ""
-staged = ""
-renamed = ""
-deleted = ""
-stashed = "≡"
-
-[git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "cyan"
-EOF
 
 # Enable sudo
 EDITOR='sed -i "s/^# *\(%wheel ALL=(ALL:ALL) ALL\)$/\1/"' visudo
@@ -133,28 +53,29 @@ sudo usermod -aG seat $username
 
 printf "Press Enter to continue..."; read dummy
 
-# Enable login manager
-sed -i '/^\[default_session\]/,/^\[/ s|^user *=.*|user = "greeter"|' /etc/greetd/config.toml
+# Enable login manager on virtual terminal 1
+cp greetd-config.toml /etc/greetd/config.toml
 
-cat /etc/greetd/config.toml
+# Regreet style to transparent bg so the video shows through
+cp greetd-regreet.css /etc/greetd/regreet.css
 
-sudo tee /etc/greetd/config.toml <<'EOF'
-[terminal]
-vt = 1
-
-[default_session]
-command = "tuigreet --time --cmd shoji_wm"
-user = "greeter"
-
-[initial_session]
-command = "shoji_wm"
-user = "$username"
-EOF
-
-echo "After editing":
-cat /etc/greetd/config.toml
 
 printf "Press Enter to continue..."; read dummy
+
+# TODO: Shojiwm fade in/out for start and finish. Can be used both by login manager and normal session
+# TODO: ReGreet liquid glass look and mpvpaper video loop playback
+# TODO: quiet login with no character mode showing not even blinking cursor:
+# quiet loglevel=3 systemd.show_status=false rd.udev.log_level=3 vt.global_cursor_default=0 splash
+
+# TODO: Splash:
+# 1. Add plymouth to HOOKS in /etc/mkinitcpio.conf, after base udev (and before encrypt or filesystems if you use them). Then:
+# sh
+# sudo plymouth-set-default-theme -R bgrt   # bgrt shows your motherboard/OEM logo
+# or: spinner, or install a custom theme
+#
+# Remaining text with greetd. Anything that prints to tty1 can flash briefly before the greeter starts. Plymouth handles most of it, but you can also add console=tty2 on the kernel line to move kernel console output off the greeter’s VT.
+# Check: after editing refind.conf, nothing needs regenerating. For the initramfs and kernel line changes, rebuild with sudo mkinitcpio -P and reboot.
+
 
 # TODO:
 cat /proc/cmdline
