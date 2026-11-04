@@ -30,7 +30,7 @@ pacman -S --needed --noconfirm steam xwayland-satellite nvidia-open nvidia-setti
 # CLI Tools
 pacman -S --needed --noconfirm sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar
 # GUI Tools
-pacman -S --needed --noconfirm zed kitty qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui
+pacman -S --needed --noconfirm zed kitty qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x
 # Fonts
 pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberation otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra
 # jetbrains is for terminal/notepad, roboto and inter are for menus (similar to SanFrancisco Display), liberation is for Microsoft Windows compatilibity, Caladea is compatible with cambria
