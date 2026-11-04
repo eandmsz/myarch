@@ -13,6 +13,7 @@ sudo pacman -Syu
 pacman -S --needed --noconfirm refind plymouth
 # Login manager
 pacman -S --needed --noconfirm greetd-regreet
+pacman -S --needed --noconfirm noctalia-greeter
 # Base system tools
 pacman -S --needed --noconfirm git base-devel rust nodejs npm python-pip
 
