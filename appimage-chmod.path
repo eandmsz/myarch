@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch ~/Applications for new AppImages
+
+[Path]
+PathChanged=%h/Applications
+Unit=appimage-chmod.service
+
+[Install]
+WantedBy=default.target
