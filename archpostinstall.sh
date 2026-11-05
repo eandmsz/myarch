@@ -15,22 +15,19 @@ pacman -S --needed --noconfirm refind plymouth
 pacman -S --needed --noconfirm greetd-regreet
 pacman -S --needed --noconfirm noctalia-greeter
 # Base system tools
-pacman -S --needed --noconfirm git base-devel rust nodejs npm python-pip
-
+pacman -S --needed --noconfirm git base-devel dkms linux-zen linux-zen-headers make gcc rust nodejs npm python-pip
+# Audio and Video (we need the dkms driver because if we use the zen kernel then we need to compile the driver)
+pacman -S --needed --noconfirm  pipewire pipewire-pulse wireplumber bluez bluez-utils nvidia-open-dkms nvidia-settings
 # Compositor (ShojiWM) requirements
 #pacman -S --needed --noconfirm libxkbcommon systemd-libs libinput mesa seatd libxcb xcb-util-cursor xorg-xwayland clang
-
 # Wayland Compositor (and Window Manager)
-pacman -S --needed --noconfirm umbriel xorg-xwayland libinput
+pacman -S --needed --noconfirm umbriel xorg-xwayland xwayland-satellite libinput
 # Shell
 pacman -S --needed --noconfirm noctalia
-
-# Steam and requirements
-pacman -S --needed --noconfirm steam xwayland-satellite nvidia-open nvidia-settings
 # CLI Tools
 pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar
 # GUI Tools
-pacman -S --needed --noconfirm zed kitty qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x
+pacman -S --needed --noconfirm zed kitty steam qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x
 # Fonts
 pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberation otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra
 # jetbrains is for terminal/notepad, roboto and inter are for menus (similar to SanFrancisco Display), liberation is for Microsoft Windows compatilibity, Caladea is compatible with cambria
@@ -41,6 +38,13 @@ pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberatio
 #    - JetBrains Mono: released 2020 updated 2023, has programming ligatures e.g. != has nicer 19*><% , narrowest of the three
 # Preferred font for menu: SF Pro Display or Inter as my second choice (Noto Sans and Roboto are also good)
 printf "Press Enter to continue..."; read dummy
+
+# Simagic Driver
+git clone https://github.com/JacKeTUs/simagic-ff.git
+sudo cp -r simagic-ff /usr/src/simagic-ff
+sudo dkms install /usr/src/simagic-ff
+sudo modprobe hid_simagic_ff
+dkms status
 
 # Enable sudo
 EDITOR='sed -i "s/^# *\(%wheel ALL=(ALL:ALL) ALL\)$/\1/"' visudo
@@ -122,6 +126,8 @@ cat /sys/module/usbcore/parameters/autosuspend
 ls -l /dev/ntsync
 lsmod | grep ntsync
     # Check if we have NTSYNC compiled in kernel and loaded
+
+systemctl --user enable --now pipewire pipewire-pulse wireplumber
 wpctl status
     # Check if audio device works
 
