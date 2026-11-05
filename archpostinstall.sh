@@ -47,7 +47,7 @@ pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberatio
 # Preferred font for menu: SF Pro Display or Inter as my second choice (Noto Sans and Roboto are also good)
 printf "Press Enter to continue..."; read dummy
 
-# Simagic Driver
+# Install Simagic Driver kernel module
 git clone https://github.com/JacKeTUs/simagic-ff.git
 sudo cp -r simagic-ff /usr/src/simagic-ff
 sudo dkms install /usr/src/simagic-ff
@@ -67,16 +67,18 @@ sudo usermod -aG seat $username
 printf "Press Enter to continue..."; read dummy
 
 # Enable login manager on virtual terminal 1
-cp greetd-config.toml /etc/greetd/config.toml
-
+# cp greetd-config.toml /etc/greetd/config.toml
 # Regreet style to transparent bg so the video shows through
-cp greetd-regreet.css /etc/greetd/regreet.css
+# cp greetd-regreet.css /etc/greetd/regreet.css
+# USE NOCTUA GREETER INSTEAD
 
 # Create Applications folder for AppImages and a service that automatically makes them executable
 mkdir -p ~/Applications
 mkdir -p ~/.config/systemd/user
 cp appimage-chmod.service ~/.config/systemd/user/appimage-chmod.service
-
+cp appimage-chmod.path ~/.config/systemd/user/appimage-chmod.path
+systemctl --user daemon-reload
+systemctl --user enable --now appimage-chmod.path
 
 printf "Press Enter to continue..."; read dummy
 
