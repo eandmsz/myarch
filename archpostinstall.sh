@@ -11,23 +11,31 @@ sudo pacman -Syu
 
 # Boot manager and splash screen
 pacman -S --needed --noconfirm refind plymouth
+
 # Login manager
 pacman -S --needed --noconfirm greetd-regreet
 pacman -S --needed --noconfirm noctalia-greeter
+
 # Base system tools
 pacman -S --needed --noconfirm git base-devel dkms linux-zen linux-zen-headers make gcc rust nodejs npm python-pip
+
 # Audio and Video (we need the dkms driver because if we use the zen kernel then we need to compile the driver)
 pacman -S --needed --noconfirm  pipewire pipewire-pulse wireplumber bluez bluez-utils nvidia-open-dkms nvidia-settings
+
 # Compositor (ShojiWM) requirements
 #pacman -S --needed --noconfirm libxkbcommon systemd-libs libinput mesa seatd libxcb xcb-util-cursor xorg-xwayland clang
 # Wayland Compositor (and Window Manager)
 pacman -S --needed --noconfirm umbriel xorg-xwayland xwayland-satellite libinput
+
 # Shell
 pacman -S --needed --noconfirm noctalia
+
 # CLI Tools
-pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar
+pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar fio
+
 # GUI Tools
 pacman -S --needed --noconfirm zed kitty steam qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x
+
 # Fonts
 pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberation otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra
 # jetbrains is for terminal/notepad, roboto and inter are for menus (similar to SanFrancisco Display), liberation is for Microsoft Windows compatilibity, Caladea is compatible with cambria
@@ -63,6 +71,11 @@ cp greetd-config.toml /etc/greetd/config.toml
 
 # Regreet style to transparent bg so the video shows through
 cp greetd-regreet.css /etc/greetd/regreet.css
+
+# Create Applications folder for AppImages and a service that automatically makes them executable
+mkdir -p ~/Applications
+mkdir -p ~/.config/systemd/user
+cp appimage-chmod.service ~/.config/systemd/user/appimage-chmod.service
 
 
 printf "Press Enter to continue..."; read dummy
