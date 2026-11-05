@@ -28,7 +28,7 @@ pacman -S --needed --noconfirm noctalia
 # Steam and requirements
 pacman -S --needed --noconfirm steam xwayland-satellite nvidia-open nvidia-settings
 # CLI Tools
-pacman -S --needed --noconfirm sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar
+pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar
 # GUI Tools
 pacman -S --needed --noconfirm zed kitty qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x
 # Fonts
