@@ -6,6 +6,8 @@ alias ll="ls -lah"
 alias vi="vim"
 alias df="df -h"
 
+fish_add_path ~/.local/bin
+fish_add_path ~/Applications
 
 function _ls_color
     set -l rgb $argv[1]
