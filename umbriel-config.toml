@@ -56,10 +56,6 @@ maximize = "#7AA3FFFF"
 minimize = "#FFD166FF"
 close_glyph = "#141419FF"       # also *_glyph_hover for each button
 
-[osd]
-position = "bottom_center"
-# top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
-
 [layout]
 mode = "scrolling"   # "scrolling" | "dwindle" | "master"
 gap = 8
