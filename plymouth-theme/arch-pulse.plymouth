@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Arch Pulse
+Description=Outlined Arch logo with a pulsing neon glow
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/arch-pulse
+ScriptFile=/usr/share/plymouth/themes/arch-pulse/arch-pulse.script
