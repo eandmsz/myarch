@@ -48,7 +48,7 @@ sudo systemctl enable --now scx.service
 
 echo "
 Install: GUI tools"
-pacman -S --needed --noconfirm zed kitty steam qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x
+pacman -S --needed --noconfirm zed kitty firefox steam qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x
 
 echo "
 Install: fonts"
