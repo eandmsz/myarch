@@ -1,4 +1,3 @@
-
 function _ls_color
     set -l rgb $argv[1]
     for ext in $argv[2..-1]
