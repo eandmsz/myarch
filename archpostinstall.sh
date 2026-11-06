@@ -90,23 +90,28 @@ vi /boot/refind_linux.conf
 echo "
 Check if boot parameters are present: mitigations=off usbcore.autosuspend=-1"
 cat /proc/cmdline
+sleep 1
 
 echo "
 Check if Spectre and Meltdown mitigations are really off"
 grep -r . /sys/devices/system/cpu/vulnerabilities/
+sleep 1
 
 sudo systemctl enable --now scx.service
 echo "
 Kernel scheduler should be lavd (Latency-critical Aware Voluntary Deprioritization)"
 cat /sys/kernel/sched_ext/root/ops
+sleep 1
 
 echo "
 Scheduler extension should be enabled"
 cat /sys/kernel/sched_ext/state
+sleep 1
 
 echo "
 IO Scheduler should be: bfq"
 cat /sys/block/sda/queue/scheduler
+sleep 1
 
 printf "Press Enter to continue..."; read dummy
 
@@ -117,24 +122,26 @@ sysctl net.core.default_qdisc
 echo "
 Kernel ticker should be 1000"
 zgrep -E 'CONFIG_HZ|CONFIG_PREEMPT|CONFIG_NO_HZ' /proc/config.gz
+sleep 1
 
 # swapon --show
 # Should be no output (swap disabled)
 
-printf "Press Enter to continue..."; read dummy
-
 echo "
 Disabled USB auto suspend should show: -1"
 cat /sys/module/usbcore/parameters/autosuspend
+sleep 1
 
 echo "
 Kernel should be: zen"
 uname -a
+sleep 1
 
 echo "
 Check if we have NTSYNC compiled in kernel and loaded"
 ls -l /dev/ntsync
 lsmod | grep ntsync
+sleep 1
 
 #systemctl --user enable --now pipewire pipewire-pulse wireplumber
 #sleep 1
@@ -147,11 +154,11 @@ echo "
 CPU Power governor should be: latency-performance"
 tuned-adm active
 
-printf "Press Enter to continue..."; read dummy
-
 echo "
 Check: mouse polling rate should be 1000Hz to have low latency input"
 sudo awk '/^S:.*Product=/{prod=$0; sub(/^S:.*Product=/,"",prod)} /^I:.*Cls=03\(HID/{if ($0~/Prot=01/) type="Keyboard"; else if ($0~/Prot=02/) type="Mouse"; else type=""} /^E:.*Ivl=/{if(type!=""){match($0,/Ivl=[0-9]+/); ivl=substr($0,RSTART+4,RLENGTH-4); if(ivl+0>0) printf "%-30s %-10s %sms -> %.0fHz\n", prod, type, ivl, 1000/ivl; type=""}}' /sys/kernel/debug/usb/devices
+
+printf "Press Enter to continue..."; read dummy
 
 echo "
 Create new user"
@@ -169,9 +176,12 @@ mv umbriel-config.toml ~/.config/umbriel/config.toml
 touch ~/.config/umbriel/outputs.generated.toml
 mkdir -p ~/.local/bin
 mv umbriel-outputs-gen ~/.local/bin/umbriel-outputs-gen
+chmod +x ~/.local/bin/umbriel-outputs-gen
 # Add Noctalia configuration
 mkdir -p ~/.config/noctalia/
 mv noctalia-config.toml ~/.config/noctalia/config.toml
+mkdir -p ~/.config/fish/
+mv config.fish ~/.config/fish/config.fish
 
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
