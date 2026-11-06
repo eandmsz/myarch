@@ -14,6 +14,15 @@ echo "
 Install: boot manager + splash screen"
 pacman -S --needed --noconfirm refind plymouth
 
+mv refind-theme /boot/EFI/refind/themes
+echo "Add: include themes/rEFInd-minimal/theme.conf at the end of refind.conf"
+echo "Add: mitigations=off usbcore.autosuspend=-1 to refind_linux.conf. Press Enter to continue..."; read dummy
+vi /boot/refind_linux.conf
+
+mkdir -p /usr/share/plymouth/themes
+mv plymouth-theme /usr/share/plymouth/themes/arch-pulse
+plymouth-set-default-theme -R arch-pulse
+
 echo "
 Install: shell + login manager"
 pacman -S --needed --noconfirm noctalia noctalia-greeter
@@ -83,17 +92,6 @@ visudo -c
 #
 # Remaining text with greetd. Anything that prints to tty1 can flash briefly before the greeter starts. Plymouth handles most of it, but you can also add console=tty2 on the kernel line to move kernel console output off the greeter’s VT.
 # Check: after editing refind.conf, nothing needs regenerating. For the initramfs and kernel line changes, rebuild with sudo mkinitcpio -P and reboot.
-
-mv refind-theme /boot/EFI/refind/themes
-echo "Add: include themes/rEFInd-minimal/theme.conf at th end of refind.conf"
-echo "Add: mitigations=off usbcore.autosuspend=-1 to refind_linux.conf. Press Enter to continue..."; read dummy
-vi /boot/refind_linux.conf
-
-echo "
-Install Plymouth theme: arch-pulse"
-mkdir -p /usr/share/plymouth/themes
-mv plymouth-theme /usr/share/plymouth/themes/arch-pulse
-plymouth-set-default-theme -R arch-pulse
 
 echo "
 Check if boot parameters are present: mitigations=off usbcore.autosuspend=-1"
