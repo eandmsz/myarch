@@ -90,6 +90,12 @@ echo "Add: mitigations=off usbcore.autosuspend=-1 to refind_linux.conf. Press En
 vi /boot/refind_linux.conf
 
 echo "
+Install Plymouth theme: arch-pulse"
+mkdir -p /usr/share/plymouth/themes
+mv plymouth-theme /usr/share/plymouth/themes/arch-pulse
+plymouth-set-default-theme -R arch-pulse
+
+echo "
 Check if boot parameters are present: mitigations=off usbcore.autosuspend=-1"
 cat /proc/cmdline
 sleep 1
