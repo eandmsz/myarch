@@ -11,11 +11,11 @@ accel_profile = "flat"   # or "adaptive", or "custom 0.2 0.0 0.5 1.0 2.0"
 sensitivity = 0.0        # -1.0 to 1.0
 
 [input.touchpad]
-accel_profile = "flat"   # or "adaptive", or "custom 0.2 0.0 0.5 1.0 2.0"
+accel_profile = "adaptive"   # adaptive is based on a reverse engineered Apple touch pad profile
 sensitivity = 0.0        # -1.0 to 1.0
 
 [input.keyboard]
-layout = "us,de"
+layout = "en,se,hu"
 options = "grp:alt_shift_toggle"
 repeat_rate = 40     # repeats/sec
 repeat_delay = 300   # ms
