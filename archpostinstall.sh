@@ -32,7 +32,7 @@ pacman -S --needed --noconfirm xorg-xwayland xwayland-satellite libinput xdg-des
 pacman -S --needed --noconfirm noctalia
 
 # CLI Tools
-pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar fio tuned scx-scheds
+pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar fio tuned scx-scheds wlr-randr
 
 # GUI Tools
 pacman -S --needed --noconfirm zed kitty steam qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x
