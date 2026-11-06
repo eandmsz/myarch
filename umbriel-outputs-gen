@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -eu
+OUT="${XDG_CONFIG_HOME:-$HOME/.config}/umbriel/outputs.generated.toml"
+mkdir -p "$(dirname "$OUT")"; touch "$OUT"
+
+list() {
+  wlr-randr | awk '
+    function flush() {
+      if (name != "")
+        print (make == "") ? name : make " " model (serial == "" ? "" : " " serial)
+      name = make = model = serial = ""
+    }
+    /^[^ \t]/        { flush(); name = $1; next }
+    /^[ \t]+Make:/   { sub(/^[ \t]+Make:[ \t]*/, "");   sub(/[ \t]+$/, ""); make = $0;   next }
+    /^[ \t]+Model:/  { sub(/^[ \t]+Model:[ \t]*/, "");  sub(/[ \t]+$/, ""); model = $0;  next }
+    /^[ \t]+Serial:/ { sub(/^[ \t]+Serial:[ \t]*/, ""); sub(/[ \t]+$/, ""); serial = $0; next }
+    END { flush() }'
+}
+
+add_new() {
+  while IFS= read -r id; do
+    [ -n "$id" ] || continue
+    grep -qiF "[output.\"$id\"]" "$OUT" && continue
+    printf '\n[output."%s"]\nscale = 1.0\nvrr = "disabled"\nhdr = "off"\nsdr_white = 203\n' \
+      "$id" >> "$OUT"
+  done < <(list)
+}
+
+add_new   # displays already connected at startup
+
+udevadm monitor --udev --subsystem-match=drm | while read -r line; do
+  case "$line" in *change*|*add*) ;; *) continue ;; esac
+  sleep 2
+  while read -r -t 1 _; do :; done   # drain the burst of events
+  add_new
+done
