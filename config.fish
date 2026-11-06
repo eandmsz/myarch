@@ -1,3 +1,12 @@
+if status is-interactive
+    # Commands only for interactive sessions
+
+
+alias ll="ls -lah"
+alias vi="vim"
+alias df="df -h"
+
+
 function _ls_color
     set -l rgb $argv[1]
     for ext in $argv[2..-1]
@@ -21,3 +30,6 @@ set -gx LS_COLORS "$LS_COLORS:"(
 )
 
 functions -e _ls_color
+
+
+end
