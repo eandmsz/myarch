@@ -1,2 +1,80 @@
 [general]
 autostart = ["noctalia"]
+mod_key = "Alt"          # also accepts Super, Ctrl, Shift
+show_cheatsheet = false
+
+[include]
+files = ["outputs.generated.toml"] # We detect new displays and save it in this toml config so we remembrer how it was set
+
+[input.mouse]
+accel_profile = "flat"   # or "adaptive", or "custom 0.2 0.0 0.5 1.0 2.0"
+sensitivity = 0.0        # -1.0 to 1.0
+
+[input.touchpad]
+accel_profile = "flat"   # or "adaptive", or "custom 0.2 0.0 0.5 1.0 2.0"
+sensitivity = 0.0        # -1.0 to 1.0
+
+[input.keyboard]
+layout = "us,de"
+options = "grp:alt_shift_toggle"
+repeat_rate = 40     # repeats/sec
+repeat_delay = 300   # ms
+
+[appearance]
+prefer_no_csd = true
+border_width = 2
+corner_radius = 10   # 0 disables
+
+[appearance.blur]
+enabled = true
+passes = 3
+radius = 5
+
+[appearance.shadow]
+enabled = true
+softness = 10
+offset_x = 2
+offset_y = 2
+
+[appearance.tab_bar]
+font = "sans 10"
+
+[appearance.title_bar]
+mode = "negotiated"                 # "off" | "negotiated" | "on" | "forced"
+height = 28
+font = "sans 10"
+button_position = "right"       # or "left"
+buttons = ["minimize", "maximize", "close"]
+button_glyph = "hover"          # "always" | "hover" | "never"
+button_background = true
+button_corner_radius = -1       # -1 follows corner_radius; 0 = square; high = circles
+
+[colors.title_bar]
+background = "#292933CC"        # add alpha to let blur show through
+close = "#FF6B6BFF"
+maximize = "#7AA3FFFF"
+minimize = "#FFD166FF"
+close_glyph = "#141419FF"       # also *_glyph_hover for each button
+
+[osd]
+position = "bottom_center"
+# top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
+
+[layout]
+mode = "scrolling"   # "scrolling" | "dwindle" | "master"
+gap = 8
+
+[keybinds]
+"Mod+Space" = "spawn:noctalia msg panel-toggle launcher"
+"Mod+L" = "spawn:noctalia msg lock"
+"Mod+Tab" = "spawn:noctalia msg window-switcher"
+"Mod+F4" = "window-close"
+"Mod+S" = "spawn:noctalia msg settings-toggle"
+"Mod+Shift" = "keyboard-layout-next"
+"XF86AudioRaiseVolume" = "spawn:noctalia msg volume-up"
+"XF86AudioLowerVolume" = "spawn:noctalia msg volume-down"
+"XF86AudioMute" = "spawn:noctalia msg volume-mute"
+"XF86MonBrightnessUp" = "spawn:noctalia msg brightness-up"
+"XF86MonBrightnessDown" = "spawn:noctalia msg brightness-down"
+"XF86KbdBrightnessUp" = "spawn:brightnessctl -d '*kbd_backlight' set +1"
+"XF86KbdBrightnessDown" = "spawn:brightnessctl -d '*kbd_backlight' set 1-"
