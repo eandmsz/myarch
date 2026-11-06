@@ -84,7 +84,9 @@ visudo -c
 # Remaining text with greetd. Anything that prints to tty1 can flash briefly before the greeter starts. Plymouth handles most of it, but you can also add console=tty2 on the kernel line to move kernel console output off the greeter’s VT.
 # Check: after editing refind.conf, nothing needs regenerating. For the initramfs and kernel line changes, rebuild with sudo mkinitcpio -P and reboot.
 
-printf "Add: mitigations=off usbcore.autosuspend=-1 to refind_linux.conf. Press Enter to continue..."; read dummy
+mv refind-theme /boot/EFI/refind/themes
+echo "Add: include themes/rEFInd-minimal/theme.conf at th end of refind.conf"
+echo "Add: mitigations=off usbcore.autosuspend=-1 to refind_linux.conf. Press Enter to continue..."; read dummy
 vi /boot/refind_linux.conf
 
 echo "
