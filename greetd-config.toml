@@ -1,7 +1,0 @@
-[terminal]
-vt = 1
-
-[default_session]
-command = "shoji_wm"   # add a config-path flag here if it has one
-user = "greeter"
-EOF
