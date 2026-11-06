@@ -12,8 +12,12 @@ center = ["workspaces", "taskbar"]
 end    = ["tray", "clock-seconds", "volume", "battery", , "input-volume", "control-center", "clock"]
 thickness = 48
 scale = 1.0         # scales icons and text inside the bar
+margin_edge = 0          # 0: flush against the screen edge
+margin_ends = 0          # 0: full length, no inset
+concave_edge_corners = true   # optional, default: true
+radius = 0              # 0: square corners
 background_opacity = 0.85
-background_color = 202020 # ??? correct syntax?
+background_color = "#202020" # same as Windows 11
 
 [widget.input-volume]
 type = "volume"
