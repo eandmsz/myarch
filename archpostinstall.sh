@@ -44,6 +44,8 @@ pacman -S --needed --noconfirm xorg-xwayland xwayland-satellite libinput xdg-des
 echo "
 Install: CLI tools"
 pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar fio tuned scx-scheds wlr-randr
+echo "SCX_SCHEDULER=scx_lavd" >> /etc/default/scx
+sudo systemctl enable --now scx.service
 
 echo "
 Install: GUI tools"
@@ -72,29 +74,8 @@ echo "Enable sudo"
 sed -i 's/^# *\(%wheel ALL=(ALL:ALL) ALL\)$/\1/' /etc/sudoers
 visudo -c
 
-# Enable login manager on virtual terminal 1
-# cp greetd-config.toml /etc/greetd/config.toml
-# Regreet style to transparent bg so the video shows through
-# cp greetd-regreet.css /etc/greetd/regreet.css
-# USE NOCTUA GREETER INSTEAD
-
-
-# TODO: Shojiwm fade in/out for start and finish. Can be used both by login manager and normal session
-# TODO: ReGreet liquid glass look and mpvpaper video loop playback
-# TODO: quiet login with no character mode showing not even blinking cursor:
-# quiet loglevel=3 systemd.show_status=false rd.udev.log_level=3 vt.global_cursor_default=0 splash
-
-# TODO: Splash:
-# 1. Add plymouth to HOOKS in /etc/mkinitcpio.conf, after base udev (and before encrypt or filesystems if you use them). Then:
-# sh
-# sudo plymouth-set-default-theme -R bgrt   # bgrt shows your motherboard/OEM logo
-# or: spinner, or install a custom theme
-#
-# Remaining text with greetd. Anything that prints to tty1 can flash briefly before the greeter starts. Plymouth handles most of it, but you can also add console=tty2 on the kernel line to move kernel console output off the greeter’s VT.
-# Check: after editing refind.conf, nothing needs regenerating. For the initramfs and kernel line changes, rebuild with sudo mkinitcpio -P and reboot.
-
 echo "
-Check if boot parameters are present: mitigations=off usbcore.autosuspend=-1"
+Check if boot parameters are present: mitigations=off usbcore.autosuspend=-1 quiet"
 cat /proc/cmdline
 sleep 1
 
@@ -103,7 +84,6 @@ Check if Spectre and Meltdown mitigations are really off"
 grep -r . /sys/devices/system/cpu/vulnerabilities/
 sleep 1
 
-sudo systemctl enable --now scx.service
 echo "
 Kernel scheduler should be lavd (Latency-critical Aware Voluntary Deprioritization)"
 cat /sys/kernel/sched_ext/root/ops
@@ -127,7 +107,7 @@ sysctl net.core.default_qdisc
 
 echo "
 Kernel ticker should be 1000"
-zgrep -E 'CONFIG_HZ|CONFIG_PREEMPT|CONFIG_NO_HZ' /proc/config.gz
+zgrep -E 'CONFIG_HZ' /proc/config.gz
 sleep 1
 
 # swapon --show
@@ -164,8 +144,6 @@ echo "
 Check: mouse polling rate should be 1000Hz to have low latency input"
 sudo awk '/^S:.*Product=/{prod=$0; sub(/^S:.*Product=/,"",prod)} /^I:.*Cls=03\(HID/{if ($0~/Prot=01/) type="Keyboard"; else if ($0~/Prot=02/) type="Mouse"; else type=""} /^E:.*Ivl=/{if(type!=""){match($0,/Ivl=[0-9]+/); ivl=substr($0,RSTART+4,RLENGTH-4); if(ivl+0>0) printf "%-30s %-10s %sms -> %.0fHz\n", prod, type, ivl, 1000/ivl; type=""}}' /sys/kernel/debug/usb/devices
 
-printf "Press Enter to continue..."; read dummy
-
 echo "
 Create new user"
 read -rp "Username: " username
@@ -174,26 +152,26 @@ passwd "$username"
 sudo systemctl enable --now seatd
 # Add user and enable rootless GPU resource access
 sudo usermod -aG seat $username
-sudo chown -R $username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
-su - $username
+sudo chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
+
 # Add Umbriel configuration
-mkdir -p ~/.config/umbriel
-mv umbriel-config.toml ~/.config/umbriel/config.toml
-touch ~/.config/umbriel/outputs.generated.toml
-mkdir -p ~/.local/bin
-mv umbriel-outputs-gen ~/.local/bin/umbriel-outputs-gen
-chmod +x ~/.local/bin/umbriel-outputs-gen
+mkdir -p /home/$username/.config/umbriel
+mv umbriel-config.toml /home/$username/.config/umbriel/config.toml
+touch /home/$username/.config/umbriel/outputs.generated.toml
+mkdir -p /home/$username/.local/bin
+mv umbriel-outputs-gen /home/$username/.local/bin/umbriel-outputs-gen
+chmod +x /home/$username/.local/bin/umbriel-outputs-gen
 # Add Noctalia configuration
-mkdir -p ~/.config/noctalia/
-mv noctalia-config.toml ~/.config/noctalia/config.toml
-mkdir -p ~/.config/fish/
-mv config.fish ~/.config/fish/config.fish
+mkdir -p /home/$username/.config/noctalia/
+mv noctalia-config.toml /home/$username/.config/noctalia/config.toml
+mkdir -p /home/$username/.config/fish/
+mv config.fish /home/$username/.config/fish/config.fish
 
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
-mkdir -p ~/Applications
-mkdir -p ~/.config/systemd/user
-cp appimage-chmod.service ~/.config/systemd/user/appimage-chmod.service
-cp appimage-chmod.path ~/.config/systemd/user/appimage-chmod.path
+mkdir -p /home/$username/Applications
+mkdir -p /home/$username/.config/systemd/user
+cp appimage-chmod.service /home/$username/.config/systemd/user/appimage-chmod.service
+cp appimage-chmod.path /home/$username/.config/systemd/user/appimage-chmod.path
 systemctl --user daemon-reload
 systemctl --user enable --now appimage-chmod.path
