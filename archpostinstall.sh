@@ -161,6 +161,9 @@ passwd "$username"
 sudo systemctl enable --now seatd
 sudo usermod -aG seat $username
 su - $username
+mkdir -p ~/.config/umbriel
+echo '[general]
+autostart = ["noctalia"]' > ~/.config/umbriel/config.toml
 
 # Create Applications folder for AppImages and a service that automatically makes them executable
 mkdir -p ~/Applications
