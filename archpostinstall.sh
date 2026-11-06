@@ -48,18 +48,16 @@ pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberatio
 # Preferred font for menu: SF Pro Display or Inter as my second choice (Noto Sans and Roboto are also good)
 printf "Press Enter to continue..."; read dummy
 
-# Install Simagic Driver kernel module
+echo "Installing Simagic DKMS Driver"
 git clone https://github.com/JacKeTUs/simagic-ff.git
 sudo cp -r simagic-ff /usr/src/simagic-ff
 sudo dkms install /usr/src/simagic-ff
 sudo modprobe hid_simagic_ff
 dkms status
 
-# Enable sudo
+echo "Enabling sudo"
 sed -i 's/^# *\(%wheel ALL=(ALL:ALL) ALL\)$/\1/' /etc/sudoers
 visudo -c
-
-printf "Press Enter to continue..."; read dummy
 
 # Enable login manager on virtual terminal 1
 # cp greetd-config.toml /etc/greetd/config.toml
@@ -67,7 +65,6 @@ printf "Press Enter to continue..."; read dummy
 # cp greetd-regreet.css /etc/greetd/regreet.css
 # USE NOCTUA GREETER INSTEAD
 
-printf "Press Enter to continue..."; read dummy
 
 # TODO: Shojiwm fade in/out for start and finish. Can be used both by login manager and normal session
 # TODO: ReGreet liquid glass look and mpvpaper video loop playback
@@ -85,10 +82,14 @@ printf "Press Enter to continue..."; read dummy
 
 
 # TODO:
-#cat /proc/cmdline
-    # Check if boot params were applied: mitigations=off irqaffinity=0-6,8-14 nohz_full=7,15 isolcpus=7,15 rcu_nocbs=7,15 usbcore.autosuspend=-1
-#grep -r . /sys/devices/system/cpu/vulnerabilities/
-    # Check if Spectre and Meltdown mitigations are really off
+echo "
+Check if boot parameters are present: mitigations=off usbcore.autosuspend=-1"
+cat /proc/cmdline
+
+echo "
+Check if Spectre and Meltdown mitigations are really off"
+grep -r . /sys/devices/system/cpu/vulnerabilities/
+
 
 #printf "Press Enter to continue..."; read dummy
 #watch -n 0.5 'ps -eLo pid,tid,psr,comm | awk "\$3 == 7"'
@@ -98,27 +99,30 @@ printf "Press Enter to continue..."; read dummy
 #cat /proc/interrupts
     # Check if no interrupts ended up on core7 and core15
 
-echo "Scheduler extension should be enabled"
+echo "
+Scheduler extension should be enabled"
 cat /sys/kernel/sched_ext/state
 
 printf "Press Enter to continue..."; read dummy
 
 sudo systemctl enable --now scx.service
-echo "Kernel scheduler should be lavd (Latency-critical Aware Voluntary Deprioritization)"
+echo "
+Kernel scheduler should be lavd (Latency-critical Aware Voluntary Deprioritization)"
 cat /sys/kernel/sched_ext/root/ops
 
-printf "Press Enter to continue..."; read dummy
-
-echo "IO Scheduler should be [bfq]"
+echo "
+IO Scheduler should be: bfq"
 cat /sys/block/sda/queue/scheduler
 
 printf "Press Enter to continue..."; read dummy
 
-echo "Network scheduler should be fq_codel (fights bufferbloat, fair queuing per flow)"
+echo "
+Network scheduler should be fq_codel (fights bufferbloat, fair queuing per flow)"
 sysctl net.core.default_qdisc
 
-echo "Kernel ticker should be 1000"
-grep 'CONFIG_HZ=' /boot/config-$(uname -r)
+echo "
+Kernel ticker should be 1000"
+zgrep -E 'CONFIG_HZ|CONFIG_PREEMPT|CONFIG_NO_HZ' /proc/config.gz
 
 # swapon --show
 # Should be no output (swap disabled)
@@ -137,12 +141,8 @@ lsmod | grep ntsync
 #wpctl status
 # Check if audio device works
 
-echo "DKMS Modules"
-dkms status
-
-printf "Press Enter to continue..."; read dummy
-
 sudo systemctl enable --now tuned.service
+tuned-adm profile latency-performance
 echo "CPU Power governor should be: latency-performance"
 tuned-adm active
 
