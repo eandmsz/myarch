@@ -9,7 +9,7 @@ background_opacity = 0.85
 position = "bottom"
 start  = ["launcher"]
 center = ["workspaces", "taskbar"]
-end    = ["tray", "clock-seconds", "volume", "battery", , "input-volume", "control-center", "clock"]
+end    = ["tray", "volume", "battery", "input-volume", "control-center", "clock"]
 thickness = 48
 scale = 1.0         # scales icons and text inside the bar
 margin_edge = 0          # 0: flush against the screen edge
@@ -21,14 +21,10 @@ background_color = "#202020" # same as Windows 11
 
 [widget.input-volume]
 type = "volume"
-device = "input"
-
-[widget.clock-seconds]
-type = "clock"
-format = "{:%H:%M:%S}"
+# device = "input"
 
 [widget.clock]
-format = "{:%H:%M}\n{:%d/%m}"
+format = "{:%H:%M}\n{:%Y-%d-%m}"
 font_scale = 1.2
 
 [widget.taskbar]
