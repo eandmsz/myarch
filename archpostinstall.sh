@@ -190,5 +190,7 @@ mv .config /home/$username/
 
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
-systemctl --user daemon-reload
-systemctl --user enable --now appimage-chmod.path
+systemctl --user -M $username@ daemon-reload
+systemctl --user -M $username@ enable --now appimage-chmod.path
+
+plymouth-set-default-theme -l
