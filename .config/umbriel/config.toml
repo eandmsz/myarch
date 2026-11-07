@@ -53,6 +53,12 @@ button_glyph = "always"          # "always" | "hover" | "never"
 button_background = true
 button_corner_radius = 0       # -1 follows corner_radius; 0 = square; high = circles
 
+[[layer_rule]]
+match.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
+blur = true
+blur_ignore_alpha = 0.6         # don't apply blur on highly transparent surfaces (below this level)
+blur_optimized = false          # optimized blur would just pre-calculate wallpaper blur instead of showing the actual window under
+
 [colors.title_bar]
 background = "#292933CC"        # add alpha to let blur show through
 close = "#FF6B6BFF"
