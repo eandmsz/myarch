@@ -48,7 +48,7 @@ pacman -S --needed --noconfirm zed kitty servo zen-browser brave-bin cachyos-gam
 
 echo "
 Install: fonts"
-pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-firacode-nerd ttf-hack-nerd ttf-roboto-mono-nerd ttf-roboto inter-font ttf-liberation ttf-liberation-mono-nerd otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra noto-fonts ttf-bigblueterminal-nerd
+pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-firacode-nerd ttf-hack-nerd ttf-roboto-mono-nerd ttf-roboto inter-font ttf-liberation ttf-liberation-mono-nerd otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra noto-fonts ttf-bigblueterminal-nerd ttf-opensans
 # jetbrains is for terminal/notepad, roboto and inter are for menus (similar to SanFrancisco Display), liberation is for Microsoft Windows compatilibity, Caladea is compatible with cambria
 # Preferred font with Nerd update for terminal, notepad and system monospace font: JetBrains Mono Nerd
 #    All of these are sans serif (nem talpas) my second choice is Hack
