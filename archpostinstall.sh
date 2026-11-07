@@ -28,35 +28,27 @@ pacman -S --needed --noconfirm noctalia noctalia-greeter
 
 echo "
 Install: base tools"
-pacman -S --needed --noconfirm git base-devel dkms linux-zen linux-zen-headers make gcc rust nodejs npm python-pip libei 
+pacman -S --needed --noconfirm git base-devel dkms linux-cachyos-bore linux-cachyos-bore-headers make gcc rust nodejs npm python-pip libei 
 
 echo "
-Install: audio/video" # (we need the dkms driver because if we use the zen kernel then we need to compile the driver)
-pacman -S --needed --noconfirm  pipewire pipewire-pulse wireplumber bluez bluez-utils nvidia-open-dkms nvidia-settings
+Install: audio/video"
+pacman -S --needed --noconfirm  pipewire pipewire-pulse wireplumber bluez bluez-utils linux-cachyos-bore-nvidia-open nvidia-settings
 
 echo "
 Install: wayland compositor (and window manager)"
-#pacman -S --needed --noconfirm libxkbcommon systemd-libs libinput mesa seatd libxcb xcb-util-cursor xorg-xwayland clang
-pacman -S --needed --noconfirm xorg-xwayland xwayland-satellite libinput xdg-desktop-portal
-# Umbriel is not in repo yet so need to install via: git clone https://aur.archlinux.org/packages/umbriel-git
+pacman -S --needed --noconfirm xorg-xwayland xwayland-satellite libinput xdg-desktop-portal-umbriel umbriel
 
 echo "
 Install: CLI tools"
-pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar fio tuned scx-scheds wlr-randr cifs-utils
-echo "SCX_SCHEDULER=scx_lavd" >> /etc/default/scx
-pacman -Ql scx-scheds | grep -i -E 'service|/etc'
-sudo systemctl enable --now scx_loader.service
-#sudo systemctl enable --now scx.service
-#check kernel support:
-zcat /proc/config.gz | grep SCHED_CLASS_EXT
+pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar fio tuned wlr-randr cifs-utils
 
 echo "
 Install: GUI tools"
-pacman -S --needed --noconfirm zed kitty firefox steam qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x veracrypt
+pacman -S --needed --noconfirm zed kitty servo zen-browser brave-bin cachyos-gaming-meta qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x veracrypt
 
 echo "
 Install: fonts"
-pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberation otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra
+pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-firacode-nerd ttf-hack-nerd ttf-roboto-mono-nerd ttf-roboto inter-font ttf-liberation ttf-liberation-mono-nerd otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra noto-fonts noto-fonts-extra
 # jetbrains is for terminal/notepad, roboto and inter are for menus (similar to SanFrancisco Display), liberation is for Microsoft Windows compatilibity, Caladea is compatible with cambria
 # Preferred font with Nerd update for terminal, notepad and system monospace font: JetBrains Mono Nerd
 #    All of these are sans serif (nem talpas) my second choice is Hack
@@ -72,9 +64,10 @@ fc-cache -fv
 echo "
 Install: Simagic DKMS Driver"
 git clone https://github.com/JacKeTUs/simagic-ff.git
-sudo cp -r simagic-ff /usr/src/simagic-ff
-sudo dkms install /usr/src/simagic-ff
-sudo modprobe hid_simagic_ff
+cp -r simagic-ff /usr/src/simagic-ff
+dkms install /usr/src/simagic-ff
+mkinitcpio -P
+modprobe hid_simagic_ff
 dkms status
 
 echo "Enable sudo"
