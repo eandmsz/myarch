@@ -114,7 +114,7 @@ sysctl net.core.default_qdisc
 
 echo "
 Kernel ticker should be 1000"
-zgrep -E 'CONFIG_HZ' /proc/config.gz
+zgrep -E '^CONFIG_HZ=' /proc/config.gz
 sleep 1
 
 # swapon --show
@@ -190,7 +190,5 @@ mv .config /home/$username/
 
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
-mkdir -p /home/$username/Applications
-chown -R $username:$username /home/$username/Applications
 systemctl --user daemon-reload
 systemctl --user enable --now appimage-chmod.path
