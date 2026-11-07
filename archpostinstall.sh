@@ -147,6 +147,7 @@ sudo awk '/^S:.*Product=/{prod=$0; sub(/^S:.*Product=/,"",prod)} /^I:.*Cls=03\(H
 read -rp "Samba Username: " sambauser
 read -rp "Samba Password: " sambapass
 echo -e "username=$sambauser\npassword=$sambapass" > /root/.smbcredentials
+sudo chmod 600 /root/.smbcredentials
 
 echo "
 Set Samba shares:"
@@ -187,3 +188,4 @@ systemctl --user -M $username@ daemon-reload
 systemctl --user -M $username@ enable --now appimage-chmod.path
 
 plymouth-set-default-theme -l
+sudo fio --name=qd1-randread --filename=/dev/nvme0n1     --rw=randread --bs=4k --iodepth=1 --numjobs=1     --ioengine=io_uring --direct=1     --runtime=60 --time_based --group_reporting     --lat_percentiles=1
