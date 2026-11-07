@@ -7,8 +7,8 @@ fi
 
 echo "
 Enable Multilib repository"
-sudo sed -i '/^#\[multilib\]/,/^#Include/ s/^#//' /etc/pacman.conf
-sudo pacman -Syu
+sed -i '/^#\[multilib\]/,/^#Include/ s/^#//' /etc/pacman.conf
+pacman -Syu
 
 echo "
 Install: boot manager + splash screen"
