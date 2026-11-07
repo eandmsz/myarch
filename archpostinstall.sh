@@ -65,6 +65,10 @@ pacman -S --needed --noconfirm ttf-font-nerd ttf-roboto inter-font ttf-liberatio
 #    - JetBrains Mono: released 2020 updated 2023, has programming ligatures e.g. != has nicer 19*><% , narrowest of the three
 # Preferred font for menu: SF Pro Display or Inter as my second choice (Noto Sans and Roboto are also good)
 
+mkdir -p /usr/local/share/fonts
+mv fonts/* /usr/local/share/fonts/
+fc-cache -fv
+
 echo "
 Install: Simagic DKMS Driver"
 git clone https://github.com/JacKeTUs/simagic-ff.git
