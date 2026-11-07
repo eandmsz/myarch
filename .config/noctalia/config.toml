@@ -8,7 +8,7 @@ background_opacity = 0.85
 [bar.default]
 position = "bottom"
 start  = ["launcher"]
-center = ["workspaces", "taskbar"]
+center = ["taskbar"]
 end    = ["tray", "volume", "battery", "input-volume", "control-center", "clock"]
 thickness = 48
 scale = 1.0         # scales icons and text inside the bar
@@ -19,6 +19,14 @@ radius = 0              # 0: square corners
 background_opacity = 0.85
 background_color = "#202020" # same as Windows 11
 
+[widget.taskbar]
+show_all_outputs = true        # optional: windows from all monitors
+group_by_workspace = false     # optional: group icons by workspace
+pinned = ["firefox", "code", "kitty"]
+pinned_opacity = 0.5     # dimming for pinned apps that aren't running
+show_running = true      # false = pinned-only strip
+icon_scale = 2.0
+
 [widget.input-volume]
 type = "volume"
 # device = "input"
@@ -26,11 +34,3 @@ type = "volume"
 [widget.clock]
 format = "{:%H:%M}\n{:%Y-%d-%m}"
 font_scale = 1.2
-
-[widget.taskbar]
-show_all_outputs = true        # optional: windows from all monitors
-group_by_workspace = false     # optional: group icons by workspace
-pinned = ["firefox", "code", "kitty"]
-pinned_opacity = 0.5     # dimming for pinned apps that aren't running
-show_running = true      # false = pinned-only strip
-icon_scale = 1.0
