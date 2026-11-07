@@ -85,16 +85,6 @@ grep -r . /sys/devices/system/cpu/vulnerabilities/
 sleep 1
 
 echo "
-Kernel scheduler should be lavd (Latency-critical Aware Voluntary Deprioritization)"
-cat /sys/kernel/sched_ext/root/ops
-sleep 1
-
-echo "
-Scheduler extension should be enabled"
-cat /sys/kernel/sched_ext/state
-sleep 1
-
-echo "
 IO Scheduler should be: bfq"
 cat /sys/block/sda/queue/scheduler
 sleep 1
@@ -119,12 +109,8 @@ cat /sys/module/usbcore/parameters/autosuspend
 sleep 1
 
 echo "
-Kernel should be: zen"
+Check kernel version and NTSYNC support:"
 uname -a
-sleep 1
-
-echo "
-Check if we have NTSYNC compiled in kernel and loaded"
 ls -l /dev/ntsync
 lsmod | grep ntsync
 sleep 1
@@ -180,8 +166,8 @@ systemctl enable --now seatd
 usermod -aG seat $username
 chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
 
-mv wallpapers_3440x1440 /home/$username/Pictures/
-mv .config /home/$username/
+mv -f wallpapers_3440x1440 /home/$username/Pictures/
+mv -f .config /home/$username/
 
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
