@@ -175,17 +175,20 @@ Create new user"
 read -rp "Username: " username
 useradd -m -G wheel -s /usr/bin/fish "$username"
 passwd "$username"
-sudo systemctl enable --now seatd
+systemctl enable --now seatd
 # Add user and enable rootless GPU resource access
-sudo usermod -aG seat $username
-sudo chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
+usermod -aG seat $username
+chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
 
+mv wallpapers_3440x1440 /home/$username/Pictures/
 mv .config /home/$username/
 
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
 systemctl --user -M $username@ daemon-reload
 systemctl --user -M $username@ enable --now appimage-chmod.path
+
+
 
 plymouth-set-default-theme -l
 sudo fio --name=qd1-randread --filename=/dev/nvme0n1     --rw=randread --bs=4k --iodepth=1 --numjobs=1     --ioengine=io_uring --direct=1     --runtime=60 --time_based --group_reporting     --lat_percentiles=1
