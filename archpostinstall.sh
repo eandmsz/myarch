@@ -182,31 +182,11 @@ sudo systemctl enable --now seatd
 sudo usermod -aG seat $username
 sudo chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
 
-
-# Add Umbriel configuration
-mkdir -p /home/$username/.config/umbriel
-chown -R $username:$username /home/$username/.config/umbriel
-mv umbriel-config.toml /home/$username/.config/umbriel/config.toml
-touch /home/$username/.config/umbriel/outputs.generated.toml
-mkdir -p /home/$username/.local/bin
-chown -R $username:$username /home/$username/.local/bin
-mv umbriel-outputs-gen /home/$username/.local/bin/umbriel-outputs-gen
-chmod +x /home/$username/.local/bin/umbriel-outputs-gen
-# Add Noctalia configuration
-mkdir -p /home/$username/.config/noctalia/
-chown -R $username:$username /home/$username/.config/noctalia
-mv noctalia-config.toml /home/$username/.config/noctalia/config.toml
-mkdir -p /home/$username/.config/fish/
-chown -R $username:$username /home/$username/.config/fish
-mv config.fish /home/$username/.config/fish/config.fish
+mv .config /home/$username/
 
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
 mkdir -p /home/$username/Applications
 chown -R $username:$username /home/$username/Applications
-mkdir -p /home/$username/.config/systemd/user
-chown -R $username:$username /home/$username/.config/systemd/user
-cp appimage-chmod.service /home/$username/.config/systemd/user/appimage-chmod.service
-cp appimage-chmod.path /home/$username/.config/systemd/user/appimage-chmod.path
 systemctl --user daemon-reload
 systemctl --user enable --now appimage-chmod.path
