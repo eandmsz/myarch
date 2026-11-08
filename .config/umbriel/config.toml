@@ -45,13 +45,17 @@ font = "sans 10"
 
 [appearance.title_bar]
 mode = "negotiated"                 # "off" | "negotiated" | "on" | "forced"
-height = 28
+height = 32
 font = "sans 10"
 button_position = "right"       # or "left"
 buttons = ["minimize", "maximize", "close"]
 button_glyph = "always"          # "always" | "hover" | "never"
 button_background = true
 button_corner_radius = 0       # -1 follows corner_radius; 0 = square; high = circles
+button_size = 32
+button_gap = 0
+button_margin = 0
+# we need a button width in the future when it will be supported
 
 [[layer_rule]]
 match.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
