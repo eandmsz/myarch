@@ -6,7 +6,8 @@ show_cheatsheet = false
 files = ["outputs.generated.toml"] # We detect new displays and save it in this toml config so we remembrer how it was set
 
 [input.mouse]
-accel_profile = "flat"   # or "adaptive", or "custom 0.2 0.0 0.5 1.0 2.0"
+#accel_profile = "flat"   # or "adaptive", or "custom 0.2 0.0 0.5 1.0 2.0"
+accel_profile = "custom 0.295 0.000000 0.167678 0.335356 0.503034 0.670712 0.838390 1.081683 1.333760 1.585978 1.838800 2.090858 2.343005 2.595528 2.847396 3.099326 3.399166 3.756493 4.137865 4.520080 4.906715 5.286516 5.671010 6.054174 6.436700 6.821177 7.202860 7.588112 7.968094 8.350721 8.734373 9.121762 9.505980 9.888116 10.271320 10.650592 11.033865 11.414730 11.798888 12.183028 12.566988 12.954197 13.334031 13.716213 14.100082 14.484719 14.871933 15.458028 16.183378 16.925294 17.696198 18.487410 19.295825 20.076785 20.867103 21.672676 22.454695 23.244358 24.047643 24.831473 25.616313 26.413244 27.202105 27.983887 28.776502"
 sensitivity = 0.0        # -1.0 to 1.0
 
 [input.touchpad]
@@ -45,14 +46,14 @@ font = "sans 10"
 
 [appearance.title_bar]
 mode = "negotiated"                 # "off" | "negotiated" | "on" | "forced"
-height = 32
-font = "sans 10"
+height = 36
+font = "SF Pro Display 10"
 button_position = "right"       # or "left"
 buttons = ["minimize", "maximize", "close"]
 button_glyph = "always"          # "always" | "hover" | "never"
 button_background = true
 button_corner_radius = 0       # -1 follows corner_radius; 0 = square; high = circles
-button_size = 32
+button_size = 36
 button_gap = 0
 button_margin = 0
 # we need a button width in the future when it will be supported
