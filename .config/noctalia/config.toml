@@ -1,5 +1,5 @@
 [shell]
-font_family = "Inter"
+font_family = "SF Pro Display"  # Noctalia default: Inter
 
 [osd]
 position = "top_right"  # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
