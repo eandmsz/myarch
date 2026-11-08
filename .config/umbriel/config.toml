@@ -22,8 +22,15 @@ repeat_delay = 300   # ms
 
 [appearance]
 prefer_no_csd = true
-border_width = 1
-corner_radius = 0   # 0 disables
+border_width = 2     # Windows 10 has zero border but the resize grip area extends outwards from the window
+outer_border_width = 2
+corner_radius = 0    # 0 disables
+
+# Test these settings: we want at the end no border (Like Win10-11 but still having a grip area for resizing)
+[colors.border]
+border_focused = "#FF0000CC"
+border_unfocused = "#CCCCCCCC"
+outer_border_color = "#00000CC"
 
 [appearance.blur]
 enabled = true
