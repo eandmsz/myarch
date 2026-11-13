@@ -4,7 +4,9 @@
 # ext4 partition
 # refind boot loader
 
-__GL_SHADER_DISK_CACHE_SIZE=10737418240 __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 %command%
+# Crossout steam launch params:  __GL_SHADER_DISK_CACHE_SIZE=10737418240 __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 %command%
+# CachyOS is much faster than Fedora and doesn't need any tweaking. Fast desktop animations, responsive desktop, better colors, net/io/kernel schedulers well chosen, 1000Hz kernel ticker and mouse polling, everything working oob
+
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script must be run as root." >&2
@@ -12,7 +14,12 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 pacman -S brave-bin linux-cachyos-bore linux-cachyos-bore-headers steam linux-cachyos-bore-nvidia-open doublecmd-qt6 zed linux-cachyos-bore-nvidia nvidia-utils
-veracrypt
+veracrypt dkms python-pip qbittorrent discord nvtop iotop-c bc 7zip fio kodi handbrake mkvtoolnix-gui hardinfo2 cpu-x
+
+# maybe later: pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner
+
+
+# These are installed by default: plymouth wayland pipewire wireplumber pipewire-pulse git python3 bluez bluez-utils npm gcc make meld fish vim cifs-utils tar mpv
 
 vim /boot/EFI/refind/refind.conf
 default_selection "vmlinuz-linux-cachyos-bore"
@@ -92,35 +99,37 @@ mkinitcpio -P
 modprobe hid_simagic_ff
 dkms status
 
-echo "Enable sudo"
-sed -i 's/^# *\(%wheel ALL=(ALL:ALL) ALL\)$/\1/' /etc/sudoers
-visudo -c
+# These are configured by default on CachyOS
+
+#echo "Enable sudo"
+#sed -i 's/^# *\(%wheel ALL=(ALL:ALL) ALL\)$/\1/' /etc/sudoers
+#visudo -c
 
 echo "
 Check if boot parameters are present: mitigations=off usbcore.autosuspend=-1 quiet"
 cat /proc/cmdline
-sleep 1
 
-echo "
-Check if Spectre and Meltdown mitigations are really off"
-grep -r . /sys/devices/system/cpu/vulnerabilities/
-sleep 1
 
-echo "
-IO Scheduler should be: bfq"
-cat /sys/block/sda/queue/scheduler
-sleep 1
+#echo "
+#Check if Spectre and Meltdown mitigations are really off"
+#grep -r . /sys/devices/system/cpu/vulnerabilities/
 
-printf "Press Enter to continue..."; read dummy
 
-echo "
-Network scheduler should be fq_codel (fights bufferbloat, fair queuing per flow)"
-sysctl net.core.default_qdisc
+#echo "
+#IO Scheduler should be: none for NVME SSD optimized for random read at QD1"
+#cat /sys/block/sda/queue/scheduler
+cat /sys/block/nvme0n1/queue/scheduler
+echo none | sudo tee /sys/block/nvme0n/queue/scheduler
+cat /sys/block/nvme0n1/queue/scheduler
 
-echo "
-Kernel ticker should be 1000"
-zgrep -E '^CONFIG_HZ=' /proc/config.gz
-sleep 1
+
+#echo "
+#Network scheduler should be fq_codel (fights bufferbloat, fair queuing per flow)"
+#sysctl net.core.default_qdisc
+
+#echo "
+#Kernel ticker should be 1000"
+#zgrep -E '^CONFIG_HZ=' /proc/config.gz
 
 # swapon --show
 # Should be no output (swap disabled)
@@ -128,14 +137,17 @@ sleep 1
 echo "
 Disabled USB auto suspend should show: -1"
 cat /sys/module/usbcore/parameters/autosuspend
-sleep 1
 
 echo "
-Check kernel version and NTSYNC support:"
+Check BORE kernel:"
 uname -a
-ls -l /dev/ntsync
-lsmod | grep ntsync
-sleep 1
+zcat /proc/config.gz | grep -i SCHED_BORE
+
+#echo "
+#Check NTSYNC support:"
+#ls -l /dev/ntsync
+#lsmod | grep ntsync
+
 
 #systemctl --user enable --now pipewire pipewire-pulse wireplumber
 #sleep 1
@@ -178,15 +190,15 @@ echo "
 # soft makes IO ops to return an error instead of trying forever, but can cause silent data loss when the client thinks the data has been written but the server is busy or unresponsive, default is hard and that's safer. Soft will definitely cause empty chunks in files when the NAS drive gets full
 " >> /etc/fstab
 
-echo "
-Create new user"
-read -rp "Username: " username
-useradd -m -G wheel -s /usr/bin/fish "$username"
-passwd "$username"
-systemctl enable --now seatd
-# Add user and enable rootless GPU resource access
-usermod -aG seat $username
-chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
+#echo "
+#Create new user"
+#read -rp "Username: " username
+#useradd -m -G wheel -s /usr/bin/fish "$username"
+#passwd "$username"
+#systemctl enable --now seatd
+## Add user and enable rootless GPU resource access
+#usermod -aG seat $username
+#chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
 
 mv -f wallpapers_3440x1440 /home/$username/Pictures/
 mv -f .config /home/$username/
@@ -198,5 +210,5 @@ systemctl --user -M $username@ enable --now appimage-chmod.path
 
 
 
-plymouth-set-default-theme -l
-sudo fio --name=qd1-randread --filename=/dev/nvme0n1     --rw=randread --bs=4k --iodepth=1 --numjobs=1     --ioengine=io_uring --direct=1     --runtime=60 --time_based --group_reporting     --lat_percentiles=1
+
+#plymouth-set-default-theme -l
