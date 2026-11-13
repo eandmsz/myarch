@@ -1,9 +1,29 @@
 #/bin/sh
 
+# During the Calamares installer:
+# ext4 partition
+# refind boot loader
+
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script must be run as root." >&2
     exit 1
 fi
+
+pacman -S brave-bin linux-cachyos-bore linux-cachyos-bore-headers steam linux-cachyos-bore-nvidia-open doublecmd-qt6 zed linux-cachyos-bore-nvidia nvidia-utils
+veracrypt
+
+vim /boot/EFI/refind/refind.conf
+default_selection "vmlinuz-linux-cachyos-bore"
+fold_linux_kernels false
+
+vim /boot/refind_linux.conf
+# add mitigations off
+
+
+
+###################################3
+#Migrate arch linux settings to cachyos:
+#
 
 echo "
 Enable Multilib repository"
