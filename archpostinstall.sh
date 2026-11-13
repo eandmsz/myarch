@@ -4,6 +4,8 @@
 # ext4 partition
 # refind boot loader
 
+__GL_SHADER_DISK_CACHE_SIZE=10737418240 __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 %command%
+
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script must be run as root." >&2
     exit 1
