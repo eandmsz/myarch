@@ -1,4 +1,4 @@
-#/bin/fish
+#!/usr/bin/env fish
 
 # During the Calamares installer:
 # ext4 partition
