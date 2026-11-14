@@ -202,8 +202,8 @@ read -rp "Username: " username
 #systemctl enable --now seatd
 ## Add user and enable rootless GPU resource access
 #usermod -aG seat $username
-#chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
 
+chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
 cp -a wallpapers_3440x1440 /home/$username/Pictures/
 cp -a .config /home/$username/
 
