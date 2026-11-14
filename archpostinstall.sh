@@ -34,46 +34,46 @@ vim /boot/refind_linux.conf
 #Migrate arch linux settings to cachyos:
 #
 
-echo "
-Enable Multilib repository"
-sed -i '/^#\[multilib\]/,/^#Include/ s/^#//' /etc/pacman.conf
-pacman -Syu
+#echo "
+#Enable Multilib repository"
+#sed -i '/^#\[multilib\]/,/^#Include/ s/^#//' /etc/pacman.conf
+#pacman -Syu
 
-echo "
-Install: boot manager + splash screen"
-pacman -S --needed --noconfirm refind plymouth
+#echo "
+#Install: boot manager + splash screen"
+#pacman -S --needed --noconfirm refind plymouth
 
-mv refind-theme /boot/EFI/refind/themes/dark-minimal
-echo "include themes/dark-minimal/theme.conf >> /boot/EFI/refind/refind.conf"
-echo "mitigations=off usbcore.autosuspend=-1 quiet" >> /boot/refind_linux.conf
+#mv refind-theme /boot/EFI/refind/themes/dark-minimal
+#echo "include themes/dark-minimal/theme.conf >> /boot/EFI/refind/refind.conf"
+#echo "mitigations=off usbcore.autosuspend=-1 quiet" >> /boot/refind_linux.conf
 
-mkdir -p /usr/share/plymouth/themes
-mv plymouth-theme /usr/share/plymouth/themes/arch-pulse
-plymouth-set-default-theme -R arch-pulse
+#mkdir -p /usr/share/plymouth/themes
+#mv plymouth-theme /usr/share/plymouth/themes/arch-pulse
+#plymouth-set-default-theme -R arch-pulse
 
-echo "
-Install: shell + login manager"
-pacman -S --needed --noconfirm noctalia noctalia-greeter
+#echo "
+#Install: shell + login manager"
+#pacman -S --needed --noconfirm noctalia noctalia-greeter
 
-echo "
-Install: base tools"
-pacman -S --needed --noconfirm git base-devel dkms linux-cachyos-bore linux-cachyos-bore-headers make gcc rust nodejs npm python-pip libei 
+#echo "
+#Install: base tools"
+#pacman -S --needed --noconfirm git base-devel dkms linux-cachyos-bore linux-cachyos-bore-headers make gcc rust nodejs npm python-pip libei 
 
-echo "
-Install: audio/video"
-pacman -S --needed --noconfirm  pipewire pipewire-pulse wireplumber bluez bluez-utils linux-cachyos-bore-nvidia-open nvidia-settings
+#echo "
+#Install: audio/video"
+#pacman -S --needed --noconfirm  pipewire pipewire-pulse wireplumber bluez bluez-utils linux-cachyos-bore-nvidia-open nvidia-settings
 
-echo "
-Install: wayland compositor (and window manager)"
-pacman -S --needed --noconfirm xorg-xwayland xwayland-satellite libinput xdg-desktop-portal-umbriel umbriel
+#echo "
+#Install: wayland compositor (and window manager)"
+#pacman -S --needed --noconfirm xorg-xwayland xwayland-satellite libinput xdg-desktop-portal-umbriel umbriel
 
-echo "
-Install: CLI tools"
-pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar fio tuned wlr-randr cifs-utils
+#echo "
+#Install: CLI tools"
+#pacman -S --needed --noconfirm pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner fish vim nvtop iotop-c bc 7zip tar fio tuned wlr-randr cifs-utils
 
-echo "
-Install: GUI tools"
-pacman -S --needed --noconfirm zed kitty servo zen-browser brave-bin cachyos-gaming-meta qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x veracrypt
+#echo "
+#Install: GUI tools"
+#pacman -S --needed --noconfirm zed kitty servo zen-browser brave-bin cachyos-gaming-meta qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x veracrypt
 
 echo "
 Install: fonts"
