@@ -13,7 +13,7 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-pacman -S brave-bin linux-cachyos-bore linux-cachyos-bore-headers steam linux-cachyos-bore-nvidia-open doublecmd-qt6 zed linux-cachyos-bore-nvidia nvidia-utils
+pacman -S --needed brave-bin linux-cachyos-bore linux-cachyos-bore-headers steam linux-cachyos-bore-nvidia-open doublecmd-qt6 zed linux-cachyos-bore-nvidia nvidia-utils
 veracrypt dkms python-pip qbittorrent discord nvtop iotop-c bc 7zip fio kodi handbrake mkvtoolnix-gui hardinfo2 cpu-x
 
 # maybe later: pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner
