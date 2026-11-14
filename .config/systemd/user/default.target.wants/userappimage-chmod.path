@@ -3,6 +3,7 @@ Description=Watch ~/Applications for new AppImages
 
 [Path]
 PathChanged=%h/Applications
+MakeDirectory=yes
 Unit=appimage-chmod.service
 
 [Install]
