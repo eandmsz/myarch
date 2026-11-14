@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/fish
 
 # During the Calamares installer:
 # ext4 partition
@@ -21,6 +21,7 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+set_color green; echo "Installing software"; set_color normal; 
 pacman -Syyu --noconfirm
 cachyos-rate-mirrors
 pacman -S --needed --noconfirm linux-cachyos-bore linux-cachyos-bore-headers linux-cachyos-bore-nvidia-open nvidia-utils steam brave-bin doublecmd-qt6 zed veracrypt dkms python-pip qbittorrent discord nvtop iotop-c bc 7zip fio kodi handbrake mkvtoolnix-gui hardinfo2 cpu-x
@@ -86,8 +87,7 @@ mitigations=off usbcore.autosuspend=-1"
 #Install: GUI tools"
 #pacman -S --needed --noconfirm zed kitty servo zen-browser brave-bin cachyos-gaming-meta qbittorrent discord doublecmd-qt6 meld kodi mpv handbrake mkvtoolnix-gui hardinfo2 cpu-x veracrypt
 
-echo "
-Install: fonts"
+set_color green; echo "Installing fonts"; set_color normal; 
 pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-firacode-nerd ttf-hack-nerd ttf-roboto-mono-nerd ttf-roboto inter-font ttf-liberation ttf-liberation-mono-nerd otf-libertinus adobe-source-serif-fonts adobe-source-sans-fonts ttf-caladea texlive-fontsextra texlive-latexextra noto-fonts ttf-bigblueterminal-nerd ttf-opensans
 # jetbrains is for terminal/notepad, roboto and inter are for menus (similar to SanFrancisco Display), liberation is for Microsoft Windows compatilibity, Caladea is compatible with cambria
 # Preferred font with Nerd update for terminal, notepad and system monospace font: JetBrains Mono Nerd
@@ -101,8 +101,10 @@ pacman -S --needed --noconfirm ttf-jetbrains-mono-nerd ttf-firacode-nerd ttf-hac
 #mv fonts/* /usr/local/share/fonts/
 #fc-cache -fv
 
+set_color green
 echo "
-Install: Simagic DKMS Driver"
+Installing Simagic DKMS Driver"
+set_color normal
 git clone https://github.com/JacKeTUs/simagic-ff.git
 cp -r simagic-ff /usr/src/simagic-ff
 dkms install /usr/src/simagic-ff
@@ -120,13 +122,17 @@ dkms status
 #Check if Spectre and Meltdown mitigations are really off"
 #grep -r . /sys/devices/system/cpu/vulnerabilities/
 
+set_color green
 echo "
 Check if boot parameters are present: quiet splash mitigations=off usbcore.autosuspend=-1"
+set_color normal
 cat /proc/cmdline
 read -rp "Press ENTER to continue..."
 
+set_color green
 echo "
 IO Scheduler should be: none for NVME SSD optimized for random read at QD1"
+set_color normal
 #cat /sys/block/sda/queue/scheduler
 echo none | sudo tee /sys/block/nvme0n1/queue/scheduler
 cat /sys/block/nvme0n1/queue/scheduler
@@ -138,30 +144,40 @@ cat /sys/block/nvme0n1/queue/scheduler
 # swapon --show
 # Should be no output (swap disabled)
 
+set_color green
 echo "
 Disabled USB auto suspend should show: -1"
+set_color normal
 cat /sys/module/usbcore/parameters/autosuspend
 read -rp "Press ENTER to continue..."
 
+set_color green
 echo "
-Check if we have BORE Kernel:"
+Check if we have BORE Kernel"
+set_color normal
 uname -a
 zcat /proc/config.gz | grep -i SCHED_BORE
 read -rp "Press ENTER to continue..."
 
+set_color green
 echo "
-Check NTSYNC support:"
+Check if the Kernel has NTSYNC support"
+set_color normal
 ls -l /dev/ntsync
 lsmod | grep ntsync
 read -rp "Press ENTER to continue..."
 
+set_color green
 echo "
 Check if Kernel ticker is 1000Hz"
+set_color normal
 zgrep -E '^CONFIG_HZ=' /proc/config.gz
 read -rp "Press ENTER to continue..."
 
+set_color green
 echo "
 Check: mouse polling rate should be 1000Hz to have low latency input"
+set_color normal
 sudo awk '/^S:.*Product=/{prod=$0; sub(/^S:.*Product=/,"",prod)} /^I:.*Cls=03\(HID/{if ($0~/Prot=01/) type="Keyboard"; else if ($0~/Prot=02/) type="Mouse"; else type=""} /^E:.*Ivl=/{if(type!=""){match($0,/Ivl=[0-9]+/); ivl=substr($0,RSTART+4,RLENGTH-4); if(ivl+0>0) printf "%-30s %-10s %sms -> %.0fHz\n", prod, type, ivl, 1000/ivl; type=""}}' /sys/kernel/debug/usb/devices
 read -rp "Press ENTER to continue..."
 
@@ -181,8 +197,10 @@ read -rp "Samba Password: " sambapass
 echo -e "username=$sambauser\npassword=$sambapass" > /root/.smbcredentials
 sudo chmod 600 /root/.smbcredentials
 
+set_color green
 echo "
-Set Samba shares:"
+Seting up Samba shares"
+set_color normal
 echo "
 //192.168.1.15/Q       /mnt/NAS-Q       cifs uid=0,credentials=/root/.smbcredentials,iocharset=utf8,noperm,nofail,_netdev,actimeo=60,nosharesock,multichannel,max_channels=2,cache=none,rw 0 0
 //192.168.1.15/W       /mnt/NAS-W       cifs uid=0,credentials=/root/.smbcredentials,iocharset=utf8,noperm,nofail,_netdev,actimeo=60,nosharesock,multichannel,max_channels=2,cache=none,rw 0 0
@@ -202,8 +220,10 @@ echo "
 # soft makes IO ops to return an error instead of trying forever, but can cause silent data loss when the client thinks the data has been written but the server is busy or unresponsive, default is hard and that's safer. Soft will definitely cause empty chunks in files when the NAS drive gets full
 " >> /etc/fstab
 
+set_color green
 echo "
 Enter user name to setup"
+set_color normal
 read -rp "Username: " username
 #useradd -m -G wheel -s /usr/bin/fish "$username"
 #passwd "$username"
@@ -215,8 +235,10 @@ chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev
 cp -a wallpapers_3440x1440 /home/$username/Pictures/
 cp -a .config /home/$username/
 
+set_color green
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
+set_color normal
 systemctl --user -M $username@ daemon-reload
 systemctl --user -M $username@ enable --now appimage-chmod.path
 
