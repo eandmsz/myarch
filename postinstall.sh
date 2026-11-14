@@ -116,15 +116,14 @@ dkms status
 #sed -i 's/^# *\(%wheel ALL=(ALL:ALL) ALL\)$/\1/' /etc/sudoers
 #visudo -c
 
-echo "
-Check if boot parameters are present: quiet splash mitigations=off usbcore.autosuspend=-1"
-cat /proc/cmdline
-
-
 #echo "
 #Check if Spectre and Meltdown mitigations are really off"
 #grep -r . /sys/devices/system/cpu/vulnerabilities/
 
+echo "
+Check if boot parameters are present: quiet splash mitigations=off usbcore.autosuspend=-1"
+cat /proc/cmdline
+read -rp "Press ENTER to continue..."
 
 echo "
 IO Scheduler should be: none for NVME SSD optimized for random read at QD1"
@@ -136,42 +135,46 @@ cat /sys/block/nvme0n1/queue/scheduler
 #Network scheduler should be fq_codel (fights bufferbloat, fair queuing per flow)"
 #sysctl net.core.default_qdisc
 
-#echo "
-#Kernel ticker should be 1000"
-#zgrep -E '^CONFIG_HZ=' /proc/config.gz
-
 # swapon --show
 # Should be no output (swap disabled)
 
 echo "
 Disabled USB auto suspend should show: -1"
 cat /sys/module/usbcore/parameters/autosuspend
+read -rp "Press ENTER to continue..."
 
 echo "
 Check if we have BORE Kernel:"
 uname -a
 zcat /proc/config.gz | grep -i SCHED_BORE
+read -rp "Press ENTER to continue..."
 
-#echo "
-#Check NTSYNC support:"
-#ls -l /dev/ntsync
-#lsmod | grep ntsync
+echo "
+Check NTSYNC support:"
+ls -l /dev/ntsync
+lsmod | grep ntsync
+read -rp "Press ENTER to continue..."
 
+echo "
+Check if Kernel ticker is 1000Hz"
+zgrep -E '^CONFIG_HZ=' /proc/config.gz
+read -rp "Press ENTER to continue..."
+
+echo "
+Check: mouse polling rate should be 1000Hz to have low latency input"
+sudo awk '/^S:.*Product=/{prod=$0; sub(/^S:.*Product=/,"",prod)} /^I:.*Cls=03\(HID/{if ($0~/Prot=01/) type="Keyboard"; else if ($0~/Prot=02/) type="Mouse"; else type=""} /^E:.*Ivl=/{if(type!=""){match($0,/Ivl=[0-9]+/); ivl=substr($0,RSTART+4,RLENGTH-4); if(ivl+0>0) printf "%-30s %-10s %sms -> %.0fHz\n", prod, type, ivl, 1000/ivl; type=""}}' /sys/kernel/debug/usb/devices
+read -rp "Press ENTER to continue..."
 
 #systemctl --user enable --now pipewire pipewire-pulse wireplumber
 #sleep 1
 #wpctl status
 # Check if audio device works
 
-sudo systemctl enable --now tuned.service
-tuned-adm profile latency-performance
-echo "
-CPU Power governor should be: latency-performance"
-tuned-adm active
-
-echo "
-Check: mouse polling rate should be 1000Hz to have low latency input"
-sudo awk '/^S:.*Product=/{prod=$0; sub(/^S:.*Product=/,"",prod)} /^I:.*Cls=03\(HID/{if ($0~/Prot=01/) type="Keyboard"; else if ($0~/Prot=02/) type="Mouse"; else type=""} /^E:.*Ivl=/{if(type!=""){match($0,/Ivl=[0-9]+/); ivl=substr($0,RSTART+4,RLENGTH-4); if(ivl+0>0) printf "%-30s %-10s %sms -> %.0fHz\n", prod, type, ivl, 1000/ivl; type=""}}' /sys/kernel/debug/usb/devices
+#systemctl enable --now tuned.service
+#tuned-adm profile latency-performance
+#echo "
+#CPU Power governor should be: latency-performance"
+#tuned-adm active
 
 read -rp "Samba Username: " sambauser
 read -rp "Samba Password: " sambapass
