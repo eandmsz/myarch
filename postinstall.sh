@@ -4,6 +4,11 @@
 # ext4 partition
 # refind boot loader
 
+# To execute post install:
+# sudo su -
+# git clone https://github.com/eandmsz/distrosetup
+# cd distrosetup
+
 # Crossout steam launch params:  __GL_SHADER_DISK_CACHE_SIZE=10737418240 __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 %command%
 # CachyOS is much faster than Fedora and doesn't need any tweaking. Fast desktop animations, responsive desktop, better colors, net/io/kernel schedulers well chosen, 1000Hz kernel ticker and mouse polling, everything working oob
 
@@ -20,13 +25,15 @@ pacman -S --needed linux-cachyos-bore linux-cachyos-bore-headers linux-cachyos-b
 
 # These are installed by default: plymouth wayland pipewire wireplumber pipewire-pulse git python3 bluez bluez-utils npm gcc make meld fish vim cifs-utils tar mpv
 
-vim /boot/EFI/refind/refind.conf
-default_selection "vmlinuz-linux-cachyos-bore"
-fold_linux_kernels false
+echo "Run: vim /boot/EFI/refind/refind.conf
+Add:
+default_selection 'vmlinuz-linux-cachyos-bore'
+fold_linux_kernels false"
 
-vim /boot/refind_linux.conf
-# add mitigations off
 
+echo "Run: vim /boot/refind_linux.conf
+Add:
+mitigations=off usbcore.autosuspend=-1"
 
 
 ###################################3
@@ -105,7 +112,7 @@ dkms status
 #visudo -c
 
 echo "
-Check if boot parameters are present: mitigations=off usbcore.autosuspend=-1 quiet"
+Check if boot parameters are present: quiet splash mitigations=off usbcore.autosuspend=-1"
 cat /proc/cmdline
 
 
@@ -114,13 +121,11 @@ cat /proc/cmdline
 #grep -r . /sys/devices/system/cpu/vulnerabilities/
 
 
-#echo "
-#IO Scheduler should be: none for NVME SSD optimized for random read at QD1"
+echo "
+IO Scheduler should be: none for NVME SSD optimized for random read at QD1"
 #cat /sys/block/sda/queue/scheduler
-cat /sys/block/nvme0n1/queue/scheduler
 echo none | sudo tee /sys/block/nvme0n/queue/scheduler
 cat /sys/block/nvme0n1/queue/scheduler
-
 
 #echo "
 #Network scheduler should be fq_codel (fights bufferbloat, fair queuing per flow)"
@@ -138,7 +143,7 @@ Disabled USB auto suspend should show: -1"
 cat /sys/module/usbcore/parameters/autosuspend
 
 echo "
-Check BORE kernel:"
+Check if we have BORE Kernel:"
 uname -a
 zcat /proc/config.gz | grep -i SCHED_BORE
 
@@ -189,9 +194,9 @@ echo "
 # soft makes IO ops to return an error instead of trying forever, but can cause silent data loss when the client thinks the data has been written but the server is busy or unresponsive, default is hard and that's safer. Soft will definitely cause empty chunks in files when the NAS drive gets full
 " >> /etc/fstab
 
-#echo "
-#Create new user"
-#read -rp "Username: " username
+echo "
+Enter user name to setup"
+read -rp "Username: " username
 #useradd -m -G wheel -s /usr/bin/fish "$username"
 #passwd "$username"
 #systemctl enable --now seatd
