@@ -204,8 +204,8 @@ read -rp "Username: " username
 #usermod -aG seat $username
 #chown -R $username:$username $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd) # change ownership of the postinstall files to be under the new user
 
-mv -f wallpapers_3440x1440 /home/$username/Pictures/
-mv -f .config /home/$username/
+cp -a wallpapers_3440x1440 /home/$username/Pictures/
+cp -a .config /home/$username/
 
 echo "
 Create Applications folder for AppImages" # and a service that automatically makes them executable
