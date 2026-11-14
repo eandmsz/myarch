@@ -124,7 +124,7 @@ cat /proc/cmdline
 echo "
 IO Scheduler should be: none for NVME SSD optimized for random read at QD1"
 #cat /sys/block/sda/queue/scheduler
-echo none | sudo tee /sys/block/nvme0n/queue/scheduler
+echo none | sudo tee /sys/block/nvme0n1/queue/scheduler
 cat /sys/block/nvme0n1/queue/scheduler
 
 #echo "
