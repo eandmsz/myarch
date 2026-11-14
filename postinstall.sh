@@ -18,6 +18,8 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+pacman -Syyu
+cachyos-rate-mirrors
 pacman -S --needed --noconfirm linux-cachyos-bore linux-cachyos-bore-headers linux-cachyos-bore-nvidia-open nvidia-utils steam brave-bin doublecmd-qt6 zed veracrypt dkms python-pip qbittorrent discord nvtop iotop-c bc 7zip fio kodi handbrake mkvtoolnix-gui hardinfo2 cpu-x
 
 # maybe later: pciutils sudo-rs uutils-coreutils ntpd-rs bottom rustnet netscanner
